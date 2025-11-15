@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alexander Honey – Gallery</title>
+  <link rel="stylesheet" href="css/style.css">
+  </head>
+<body class="gallery-page">
+
+  <!-- Intro Logo (shows briefly on load) -->
+  <div id="intro-screen">
+    <img src="assets/logo.png" alt="Logo">
+  </div>
+
+  <div id="game-wrapper">
+    <div id="game-container">
+      <!-- Background for gallery -->
+      <img id="background" src="assets/gallery-base.png" alt="Gallery background">
+      <div id="gallery-overlay" aria-hidden="true"></div>
+      <img id="gallery-string-lights" src="assets/gallery-string-lights.png" alt="Gallery string lights">
+      <img id="light-switch" src="assets/light-switch.png" alt="Light Switch">
+      <img id="gallery-light-glow" src="assets/gallery-lights-glow.png" alt="Gallery Lights Glow" aria-hidden="true">
+      <img id="stills-glow-one" src="assets/stills-glow-one.png" alt="" aria-hidden="true">
+      <img id="stills-glow-two" src="assets/stills-glow-two.png" alt="" aria-hidden="true">
+      <img id="stills-glow-three" src="assets/stills-glow-three.png" alt="" aria-hidden="true">
+      <img id="stills-glow-four" src="assets/stills-glow-four.png" alt="" aria-hidden="true">
+      <img id="construction-glow-one" src="assets/con-glow-one.png" alt="" aria-hidden="true">
+      <img id="construction-glow-two" src="assets/con-glow-two.png" alt="" aria-hidden="true">
+      <img id="gallery-moderator" src="assets/moderator.png" alt="Moderator">
+      <img id="gallery-sexy-nurse" src="assets/sexy-nurse.png" alt="Sexy Nurse">
+      <img id="gallery-hhbd" src="assets/hhbd.png" alt="HHBD">
+      <img id="gallery-mr-floof" src="assets/mr-floof.png" alt="Mr Floof">
+      <img id="gallery-bros" src="assets/bros.png" alt="Bros">
+      <img id="gallery-misc" src="assets/misc.png" alt="Misc">
+      <img id="gallery-construction" src="assets/construction.png" alt="Construction">
+      <img id="gallery-bea-and-kate" src="assets/bea-and-kate.png" alt="Bea and Kate">
+      <img id="gallery-swan" src="assets/swan.png" alt="Swan">
+      <img id="gallery-pool" src="assets/pool.png" alt="Pool">
+      <img id="stills-sign" src="assets/stills-sign.png" alt="Stills sign">
+
+      <!-- Optional: Cloud navigation -->
+      <img id="nav-home"    class="nav-cloud" src="assets/nav-home.png"    alt="Home"/>
+      <img id="nav-about"   class="nav-cloud" src="assets/nav-about.png"   alt="About"/>
+      <img id="nav-gallery" class="nav-cloud nav-cloud-current" src="assets/nav-gallery.png" alt="Gallery"/>
+      <img id="nav-credits" class="nav-cloud" src="assets/nav-credits.png" alt="Credits"/>
+      <div id="nav-home-hit" class="nav-hit"></div>
+      <div id="nav-about-hit" class="nav-hit"></div>
+      <div id="nav-gallery-hit" class="nav-hit"></div>
+      <div id="nav-credits-hit" class="nav-hit"></div>
+
+      <!-- Bottom icons -->
+      <img id="mail" src="assets/gmail.png" alt="Mail"/>
+      <img id="phone" src="assets/phone.png" alt="Phone"/>
+      <img id="instagram" src="assets/instagram.png" alt="Instagram"/>
+      <img id="vimeo" src="assets/vimeo.png" alt="Vimeo"/>
+
+      <div id="mail-hit" class="hitbox"></div>
+      <div id="phone-hit" class="hitbox"></div>
+      <div id="instagram-hit" class="hitbox"></div>
+      <div id="light-switch-hit" class="hitbox"></div>
+      <div id="gallery-sexy-nurse-hit" class="hitbox"></div>
+      <div id="gallery-hhbd-hit" class="hitbox"></div>
+      <div id="gallery-bros-hit" class="hitbox"></div>
+      <div id="gallery-mr-floof-hit" class="hitbox"></div>
+      <div id="gallery-bea-and-kate-hit" class="hitbox"></div>
+      <div id="gallery-moderator-hit" class="hitbox"></div>
+      <div id="gallery-misc-hit" class="hitbox"></div>
+    </div>
+    <!-- Slideshow modal for Bea & Kate -->
+    <div id="bea-modal" class="modal" aria-hidden="true">
+      <button id="bea-close" class="modal-close" aria-label="Close">×</button>
+      <button id="bea-prev" class="modal-nav prev" aria-label="Previous">‹</button>
+      <img id="bea-slide" alt="Bea and Kate slideshow">
+      <button id="bea-next" class="modal-nav next" aria-label="Next">›</button>
+      <div id="bea-indicator" class="modal-indicator"></div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

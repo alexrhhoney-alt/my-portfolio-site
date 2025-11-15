@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alexander Honey – Portfolio</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="home-page">
+
+  <!-- Intro Logo (shows for ~2s, then hides) -->
+  <div id="intro-screen">
+    <img src="assets/logo.png" alt="Logo"/>
+  </div>
+
+  <!-- Game screen wrapper (centers the canvas) -->
+  <div id="game-wrapper">
+    <!-- Locked 1280x720 canvas that scales responsively -->
+    <div id="game-container">
+      <!-- Background -->
+      <img id="background" src="assets/livingroom-base.png" alt="Living Room">
+      <img id="light-glow" src="assets/light-glow.png" alt="Light Glow"/>
+      <img id="string-lights" src="assets/string-lights.png" alt="String Lights"/>
+      <img id="home-logo" src="assets/logo.png" alt="Alexander Honey logo">
+      <div id="disco-lights"></div>
+      <img id="disco-ball" src="assets/disco-ball-one.png" alt="Disco ball"/>
+
+      <!-- Interactive elements -->
+      <img id="door" src="assets/door-closed.png" alt="Door"/>
+      <img id="tv" src="assets/tv.png" alt="TV"/>
+      <img id="dog" src="assets/dog.png" alt="Dog"/>
+      <img id="light-switch" src="assets/light-switch.png" alt="Light Switch"/>
+      <img id="cd" src="assets/cd.png" alt="CD"/>
+      <img id="oscar-statue" src="assets/oscar-statue.png" alt="Oscar Statue"/>
+      <img id="shaka-statue" src="assets/shaka-statue.png" alt="Shaka Statue"/>
+      <img id="sc-logo" src="assets/sc-logo.png" alt="SC Logo"/>
+      <img id="trojan" src="assets/trojan.png" alt="Trojan"/>
+      <img id="bro-picture" src="assets/bro-picture.png" alt="Bro Picture"/>
+      <img id="maxie-portrait" src="assets/maxie-portrait.png" alt="Maxie Portrait"/>
+      <img id="plant" src="assets/plant.png" alt="Plant"/>
+      <img id="dumbell" src="assets/dumbell.png" alt="Dumbell"/>
+      <img id="gains-one" class="gains-frame" src="assets/gains-one.png" alt="" aria-hidden="true"/>
+      <img id="gains-two" class="gains-frame" src="assets/gains-two.png" alt="" aria-hidden="true"/>
+      <img id="gains-three" class="gains-frame" src="assets/gains-three.png" alt="" aria-hidden="true"/>
+      <img id="gains-four" class="gains-frame" src="assets/gains-four.png" alt="" aria-hidden="true"/>
+      <img id="gains-five" class="gains-frame" src="assets/gains-five.png" alt="" aria-hidden="true"/>
+      <img id="gains-six" class="gains-frame" src="assets/gains-six.png" alt="" aria-hidden="true"/>
+      <img id="basket" src="assets/basket.png" alt="Basket"/>
+      <img id="beehive-portrait" src="assets/beehive-portrait.png" alt="Beehive Portrait"/>
+      <img id="banana-portrait" src="assets/banana-portrait.png" alt="Banana Portrait"/>
+      <img id="banana-portrait-dance" src="assets/banana-portrait.png" alt="" aria-hidden="true"/>
+      <img id="flower-portrait" src="assets/flower-portrait.png" alt="Flower Portrait"/>
+      <img id="cockatoo-portrait" src="assets/cockatoo-portrait.png" alt="Cockatoo Portrait"/>
+      <img id="hot-dog-portrait" src="assets/hot-dog-portrait.png" alt="Hot Dog Portrait"/>
+      <img id="dancing-dudes-one" src="assets/dancing-dudes-one.png" alt="Dancing Dudes"/>
+      <img id="dancing-dudes-dance" src="assets/dancing-dudes-one.png" alt="" aria-hidden="true"/>
+      <img id="bee" src="assets/bee.png" alt="Bee"/>
+      <img id="green-man" src="assets/green-man.png" alt="Green Man"/>
+      <img id="hot-dog-cable" src="assets/hot-dog-cable.png" alt="Hot Dog Cable"/>
+      <img id="hot-dog" src="assets/hot-dog-sign.png" alt="Hot Dog"/>
+      <img id="hot-dog-dance" src="assets/hot-dog-sign.png" alt="" aria-hidden="true"/>
+      <img id="rubiks-cube" src="assets/rubiks-cube.png" alt="Rubik's Cube"/>
+      <img id="skull" src="assets/skull.png" alt="Skull"/>
+      <img id="skull-fire" src="assets/fire-one.png" alt="" aria-hidden="true"/>
+      <img id="heart" src="assets/heart.png" alt="Heart"/>
+      <img id="writing" class="category-sign" src="assets/writing.png" alt="Writing"/>
+      <img id="writing-glow" class="category-glow" src="assets/writing-glow.png" alt="" aria-hidden="true"/>
+      <img id="directing" class="category-sign" src="assets/directing.png" alt="Directing"/>
+      <img id="directing-glow" class="category-glow" src="assets/directing-glow.png" alt="" aria-hidden="true"/>
+      <img id="production-design" class="category-sign" src="assets/production-design.png" alt="Production Design"/>
+      <img id="production-design-glow" class="category-glow" src="assets/production-design-glow.png" alt="" aria-hidden="true"/>
+      <img id="animation" class="category-sign" src="assets/animation.png" alt="Animation"/>
+      <img id="animation-glow" class="category-glow" src="assets/animation-glow.png" alt="" aria-hidden="true"/>
+
+
+      <!-- Bottom icons (optional: delete if you don't have them yet) -->
+      <img id="mail" src="assets/gmail.png" alt="Mail"/>
+      <img id="phone" src="assets/phone.png" alt="Phone"/>
+      <img id="instagram" src="assets/instagram.png" alt="Instagram"/>
+      <img id="vimeo" src="assets/vimeo.png" alt="Vimeo"/>
+
+      <!-- Cloud nav (optional) -->
+      <img id="nav-home"    class="nav-cloud nav-cloud-current" src="assets/nav-home.png"    alt="Home"/>
+      <img id="nav-about"   class="nav-cloud" src="assets/nav-about.png"   alt="About"/>
+      <img id="nav-gallery" class="nav-cloud" src="assets/nav-gallery.png" alt="Gallery"/>
+      <img id="nav-credits" class="nav-cloud" src="assets/nav-credits.png" alt="Credits"/>
+      <div id="nav-home-hit" class="nav-hit"></div>
+      <div id="nav-about-hit" class="nav-hit"></div>
+      <div id="nav-gallery-hit" class="nav-hit"></div>
+      <div id="nav-credits-hit" class="nav-hit"></div>
+
+      <!-- Clickable hitboxes (transparent overlays) -->
+      <div id="door-hit" class="hitbox"></div>
+      <div id="tv-hit" class="hitbox"></div>
+      <div id="dog-hit" class="hitbox"></div>
+      <div id="light-switch-hit" class="hitbox"></div>
+      <div id="cd-hit" class="hitbox"></div>
+      <div id="shaka-hit" class="hitbox"></div>
+      <div id="sc-hit" class="hitbox"></div>
+      <div id="maxie-hit" class="hitbox"></div>
+      <div id="mail-hit" class="hitbox"></div>
+      <div id="phone-hit" class="hitbox"></div>
+      <div id="instagram-hit" class="hitbox"></div>
+      <div id="plant-hit" class="hitbox"></div>
+      <div id="rubiks-hit" class="hitbox"></div>
+      <div id="banana-hit" class="hitbox"></div>
+      <div id="dumbell-hit" class="hitbox"></div>
+      <div id="flower-hit" class="hitbox"></div>
+      <div id="cockatoo-hit" class="hitbox"></div>
+      <div id="hot-dog-sign-hit" class="hitbox"></div>
+      <div id="hot-dog-portrait-hit" class="hitbox"></div>
+      <div id="dancing-dudes-hit" class="hitbox"></div>
+      <div id="skull-hit" class="hitbox"></div>
+      <div id="heart-hit" class="hitbox"></div>
+      <div id="beehive-hit" class="hitbox"></div>
+      <div id="green-man-hit" class="hitbox"></div>
+      <div id="writing-hit" class="hitbox category-hit" data-target="writing" tabindex="0"></div>
+      <div id="directing-hit" class="hitbox category-hit" data-target="directing" tabindex="0"></div>
+      <div id="production-design-hit" class="hitbox category-hit" data-target="production-design" tabindex="0"></div>
+      <div id="animation-hit" class="hitbox category-hit" data-target="animation" tabindex="0"></div>
+    </div>
+  </div>
+
+  <audio id="cd-audio" src="assets/theme.mp3" preload="auto" hidden></audio>
+  <script src="js/script.js"></script>
+</body>
+</html>

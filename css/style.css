@@ -1,0 +1,1333 @@
+/* RESET / PAGE */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: black;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+}
+
+/* INTRO LOGO */
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  background: linear-gradient(135deg,
+    #ff4d4d,
+    #ff9a1f,
+    #ffd60a,
+    #4cd964,
+    #5ac8fa,
+    #5856d6,
+    #ff2d55);
+}
+#intro-screen img {
+  width: 1200px;
+  image-rendering: pixelated;
+}
+
+/* CENTER THE "GAME" LIKE A CONSOLE */
+#game-wrapper {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+    linear-gradient(135deg,
+      #ff4d4d,
+      #ff9a1f,
+      #ffd60a,
+      #4cd964,
+      #5ac8fa,
+      #5856d6,
+      #ff2d55);
+}
+
+/* LOCKED 320x180 CANVAS, SCALED RESPONSIVELY VIA TRANSFORM */
+#game-container {
+  position: relative;
+  width: 320px;
+  height: 180px;
+  transform: scale(var(--scale, 1));
+  transform-origin: center;
+}
+
+#game-container.dimmed {
+  filter: brightness(90%);
+  transition: filter 0.3s ease;
+}
+
+/* BACKGROUND */
+#background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* ALL SPRITES LAYERED ABOVE THE BACKGROUND */
+#game-container img {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+/* ==== POSITIONS (pixel-perfect for native 320x180) ==== */
+
+#door,
+#tv,
+#dog,
+#light-switch,
+#cd,
+#oscar-statue,
+#shaka-statue,
+#sc-logo,
+#skull,
+#bro-picture,
+#maxie-portrait,
+#plant,
+#dumbell,
+#gains-one,
+#gains-two,
+#gains-three,
+#gains-four,
+#gains-five,
+#gains-six,
+#basket,
+#beehive-portrait,
+#banana-portrait,
+#bee,
+#green-man,
+#hot-dog,
+#rubiks-cube,
+#skull,
+#heart,
+#skull-fire,
+#writing,
+#writing-glow,
+#directing,
+#directing-glow,
+#production-design,
+#production-design-glow,
+#animation,
+#animation-glow,
+#stills-sign,
+#credits-string-lights,
+#credits-shorts,
+#credits-features,
+#credits-fun-stuff,
+#credits-digital,
+#me-leaning,
+#magpies,
+#magpies-overlay,
+#features-credits-list,
+#features-x,
+#shorts-credits-list,
+#shorts-x,
+#digital-content-credits,
+#digital-content-x,
+#fun-stuff-credits,
+#fun-stuff-x,
+#graffiti,
+#about-light-glow,
+#bio-one,
+#bio-two,
+#bio-three,
+#bio-four,
+#shrug-emoji,
+#spray-can,
+#soap-bucket,
+#kookaburra,
+#cactus-mad,
+#string-lights,
+#disco-ball,
+#mail,
+#phone,
+#instagram,
+#vimeo {
+  left: 0;
+  top: 0;
+  width: 320px;
+  pointer-events: none; /* clicks handled by hitboxes */
+}
+
+/* Make gallery stills clickable */
+.gallery-page #gallery-bea-and-kate,
+.gallery-page #gallery-sexy-nurse,
+.gallery-page #gallery-hhbd,
+.gallery-page #gallery-bros,
+.gallery-page #gallery-mr-floof,
+.gallery-page #gallery-moderator,
+.gallery-page #gallery-misc {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Basic modal styles for gallery slideshow */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  place-items: center;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+}
+.modal.open { display: grid; }
+
+#bea-slide {
+  max-width: 90vw;
+  max-height: 85vh;
+  image-rendering: pixelated;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 28px;
+  background: none;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  background: rgba(0,0,0,0.3);
+  border: 0;
+  color: #fff;
+  width: 44px;
+  height: 64px;
+  cursor: pointer;
+}
+.modal-nav.prev { left: 12px; }
+.modal-nav.next { right: 12px; }
+
+.modal-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font: 14px/1 system-ui, sans-serif;
+}
+
+#cd {
+  z-index: 1;
+  transform-origin: 242px 52px;
+  transform-box: fill-box;
+}
+
+#oscar-statue {
+  z-index: 2;
+}
+
+#shaka-statue {
+  z-index: 3;
+  left: -1px;
+}
+
+#shaka-statue.dancing {
+  animation:
+    dog-dance calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2)) ease-in-out infinite,
+    dog-dance-color calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2) * 2) linear infinite;
+  transform-origin: 270px 120px;
+  filter: hue-rotate(0deg);
+}
+
+#shaka-statue.psychedelic {
+  animation: shaka-psychedelic 2s ease-in-out forwards;
+  transform-origin: 270px 120px;
+  filter: hue-rotate(0deg);
+}
+
+#string-lights {
+  z-index: 5;
+  pointer-events: none;
+}
+
+#sc-logo {
+  z-index: 1;
+}
+
+#trojan {
+  z-index: 6;
+  display: none;
+  left: 0;
+  top: 0;
+  width: 320px;
+  pointer-events: none;
+}
+
+.lights-off #bro-picture,
+.lights-off #maxie-portrait,
+.lights-off #beehive-portrait,
+.lights-off #banana-portrait,
+.lights-off #cockatoo-portrait,
+.lights-off #skull {
+  filter: brightness(0.9);
+}
+
+#bro-picture {
+  z-index: 1;
+}
+
+#plant {
+  z-index: 4;
+  --plant-dance-duration: 0.6s;
+}
+
+#dumbell {
+  z-index: 6;
+  left: -1px;
+}
+
+.gains-frame {
+  z-index: 7;
+  display: none;
+  pointer-events: none;
+}
+
+#dumbell.dancing {
+  animation:
+    dumbell-dance var(--dumbell-dance-duration, 0.6s) ease-in-out infinite alternate,
+    dumbell-dance-color calc(var(--dumbell-dance-duration, 0.6s) * 2) linear infinite;
+  filter: hue-rotate(0deg);
+}
+
+#basket {
+  z-index: 2;
+}
+
+#beehive-portrait {
+  z-index: 1;
+}
+
+#banana-portrait {
+  z-index: 6;
+}
+
+#banana-portrait-dance {
+  left: 0;
+  top: 0;
+  z-index: 7;
+  pointer-events: none;
+  display: none;
+}
+
+#flower-portrait {
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+#cockatoo-portrait {
+  left: 0;
+  top: 0;
+  z-index: 6;
+  pointer-events: none;
+  transform-origin: 46px 10px;
+  filter: none;
+}
+
+.cockatoo-pulse {
+  animation: cockatoo-pulse 3s ease-in-out infinite;
+}
+
+.cockatoo-speech-five {
+  z-index: 8 !important;
+}
+
+@keyframes cockatoo-pulse {
+  0%, 80%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+  }
+  20% {
+    transform: scale(1.08);
+    filter:
+      brightness(1.15)
+      drop-shadow(0 0 10px rgba(255, 255, 255, 0.85))
+      drop-shadow(0 0 20px rgba(255, 205, 120, 0.5));
+  }
+  40% {
+    transform: scale(1.04);
+    filter:
+      brightness(1.08)
+      drop-shadow(0 0 8px rgba(255, 255, 255, 0.65))
+      drop-shadow(0 0 14px rgba(255, 205, 120, 0.35));
+  }
+}
+
+#gallery-swan {
+  left: 0;
+  top: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+#gallery-pool {
+  left: 0;
+  top: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+#gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  pointer-events: none;
+  z-index: 1;
+}
+
+#gallery-construction {
+  left: 0;
+  top: 0;
+  width: 320px;
+  pointer-events: none;
+  z-index: 8;
+}
+
+#construction-glow-one,
+#construction-glow-two {
+  left: 0;
+  top: 0;
+  width: 320px;
+  pointer-events: none;
+  display: none;
+  z-index: 9;
+}
+
+.gallery-page #mail,
+.gallery-page #phone,
+.gallery-page #instagram,
+.gallery-page #vimeo {
+  z-index: 10;
+}
+
+#hot-dog {
+  left: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+#hot-dog-portrait {
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+#dancing-dudes-one {
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+#dancing-dudes-dance {
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+  display: none;
+}
+
+#dancing-dudes-dance {
+  left: 0;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: none;
+}
+
+#hot-dog-dance {
+  left: 0;
+  top: 0;
+  z-index: 4;
+  pointer-events: none;
+  display: none;
+}
+
+#hot-dog-cable {
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+#spray-can,
+#soap-bucket,
+#kookaburra,
+#cactus-mad {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.about-page #spray-can {
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 4;
+}
+
+#bee {
+  z-index: 4;
+  display: none;
+  transform-origin: center;
+  pointer-events: none;
+  --bee-animation: none;
+  animation: var(--bee-animation);
+}
+
+#green-man {
+  left: 0;
+  top: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* remove pointer-events adjustment to allow portrait overlay to click through hitbox */
+
+#rubiks-cube {
+  z-index: 5;
+}
+
+#directing {
+  filter: brightness(0.8);
+}
+
+#heart {
+  z-index: 3;
+}
+
+#skull-fire {
+  z-index: 3;
+  display: none;
+  pointer-events: none;
+}
+
+#skull.music-active {
+  animation: skull-color 3s linear infinite;
+}
+
+#writing,
+#directing,
+#production-design,
+#animation {
+  z-index: 2;
+}
+
+.category-glow {
+  z-index: 3;
+  display: none;
+  opacity: 0.6;
+}
+
+/* Make the directing glow 10% brighter than other glows */
+#directing-glow { opacity: 0.66; }
+
+.category-glow.is-visible {
+  display: block;
+}
+
+.category-sign {
+  filter: brightness(0.725);
+  transition: filter 0.25s ease;
+}
+
+.category-sign.glow-active {
+  filter: brightness(1);
+}
+
+#directing.glow-active {
+  filter: brightness(1.1);
+}
+
+#writing.glow-active {
+  filter: brightness(1.1);
+}
+
+#bee.dancing {
+  display: block;
+  --bee-animation: bee-dance 1.4s ease-in-out infinite alternate,
+                    bee-dance-color 3s linear infinite;
+  filter: hue-rotate(0deg);
+}
+
+#bee.flying {
+  display: block;
+  --bee-animation: bee-flight 4.5s ease-in-out forwards;
+}
+
+#cd.spinning {
+  animation: cd-spin 5s linear infinite;
+  transform-origin: 242px 52px;
+}
+
+#tv {
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes cd-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+#light-switch {
+  z-index: 1;
+}
+
+/* Ensure gallery glow overlays the light switch graphic */
+.gallery-page #gallery-light-glow {
+  z-index: 5;
+  pointer-events: none;
+}
+
+#about-light-glow {
+  display: none;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* (magpie animation moved higher in file for easier editing) */
+
+.about-page .about-fade-in {
+  opacity: 0;
+  transition: opacity 0.45s ease-in;
+}
+
+.about-page .about-fade-in.is-visible {
+  opacity: 1;
+}
+
+.about-page #bio-one,
+.about-page #bio-two,
+.about-page #bio-three,
+.about-page #bio-four,
+.about-page #shrug-emoji {
+  display: none;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.about-page #light-switch {
+  pointer-events: none;
+  cursor: default;
+  z-index: 4;
+}
+
+.about-page #light-switch-hit {
+  position: absolute;
+  left: 6px;
+  top: 150px;
+  width: 16px;
+  height: 30px;
+  z-index: 7;
+}
+
+.about-page #spray-can {
+  pointer-events: none;
+  cursor: default;
+  z-index: 4;
+}
+
+.about-page #spray-can-hit {
+  position: absolute;
+  left: 125px;
+  top: 116px;
+  width: 23px;
+  height: 32px;
+  z-index: 7;
+}
+
+.about-page #soap-bucket {
+  pointer-events: none;
+  z-index: 4;
+}
+
+.about-page #soap-bucket-hit {
+  position: absolute;
+  left: 139px;
+  top: 122px;
+  width: 26px;
+  height: 26px;
+  z-index: 7;
+}
+
+.about-page #cactus-mad {
+  pointer-events: none;
+  z-index: 4;
+}
+
+.about-page #cactus-hit {
+  position: absolute;
+  left: 272px;
+  top: 90px;
+  width: 48px;
+  height: 54px;
+  z-index: 7;
+}
+
+.about-page .cactus-overlay {
+  display: none;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.about-page .cactus-overlay.is-visible {
+  display: block;
+}
+
+.about-page #logo-mark {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 144px;
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.home-page #home-logo,
+.credits-page #home-logo {
+  position: absolute;
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 6;
+  display: block;
+}
+
+.home-page #home-logo {
+  left: 9px;
+  top: 4px;
+  width: 269px;
+  filter: brightness(1.15);
+}
+
+.credits-page #home-logo {
+  left: -2px;
+  top: -2px;
+  width: 144px;
+}
+
+.lights-on #home-logo {
+  display: block;
+}
+
+.credits-page #credits-string-lights {
+  pointer-events: none;
+  z-index: 2;
+}
+
+.credits-page #credits-string-lights-glow {
+  display: none;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.credits-page #credits-shorts,
+.credits-page #credits-features,
+.credits-page #credits-fun-stuff,
+.credits-page #credits-digital {
+  pointer-events: none;
+  z-index: 3;
+}
+
+.credits-page #me-leaning {
+  pointer-events: none;
+  z-index: 5;
+}
+
+.credits-page #features-credits-list {
+  display: none;
+  pointer-events: auto;
+  z-index: 9;
+}
+
+.credits-page #features-x {
+  display: none;
+  pointer-events: auto;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.credits-page #shorts-credits-list,
+.credits-page #digital-content-credits {
+  display: none;
+  pointer-events: auto;
+  z-index: 9;
+}
+.credits-page #fun-stuff-credits {
+  display: none;
+  pointer-events: auto;
+  z-index: 9;
+}
+
+.credits-page #shorts-x,
+.credits-page #digital-content-x {
+  display: none;
+  pointer-events: auto;
+  z-index: 10;
+  cursor: pointer;
+}
+.credits-page #fun-stuff-x {
+  display: none;
+  pointer-events: auto;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.credits-page #mail,
+.credits-page #phone,
+.credits-page #instagram,
+.credits-page #vimeo {
+  pointer-events: none;
+  z-index: 5;
+}
+
+.credits-page .credits-glow {
+  display: none;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.credits-page .credits-glow.is-visible {
+  display: block;
+}
+
+.credits-page #credits-fun-stuff-glow {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.credits-page #credits-fun-stuff-glow.is-visible {
+  opacity: 1;
+}
+
+.credits-page #light-switch {
+  z-index: 4;
+}
+
+.credits-page #light-switch-glow {
+  display: none;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.credits-page #light-switch-hit {
+  position: absolute;
+  left: 5px;
+  top: 154px;
+  width: 14px;
+  height: 24px;
+  z-index: 7;
+}
+
+.credits-page #light-switch-hit {
+  position: absolute;
+  left: 5px;
+  top: 154px;
+  width: 14px;
+  height: 24px;
+  z-index: 7;
+}
+
+.about-page #kookaburra {
+  pointer-events: none;
+  z-index: 4;
+}
+
+.about-page #kookaburra-hit {
+  position: absolute;
+  left: 213px;
+  top: 26px;
+  width: 107px;
+  height: 58px;
+  z-index: 7;
+}
+
+.about-page #graffiti {
+  display: none;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+}
+
+.about-page #graffiti.graffiti-visible {
+  display: block;
+}
+
+.about-page #graffiti.graffiti-animate {
+  animation: graffiti-spray 3.2s ease-out forwards;
+}
+
+.about-page #graffiti.graffiti-erasing {
+  animation: graffiti-erase 2.4s ease-in forwards;
+}
+
+.soap-bucket-bounce {
+  animation: soap-bucket-bounce 0.9s ease-out;
+}
+
+.spray-can-shake {
+  animation: spray-can-shake 0.6s ease-in-out;
+}
+
+.earthquake {
+  animation: earthquake-shake 0.05s linear 20;
+}
+
+.spray-can-hop {
+  animation: spray-can-hop 0.35s ease-out;
+}
+
+@keyframes spray-can-shake {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  15%  { transform: translate(-1px, -1px) rotate(-6deg); }
+  30%  { transform: translate(1px, 0) rotate(4deg); }
+  45%  { transform: translate(-2px, 1px) rotate(-8deg); }
+  60%  { transform: translate(2px, -1px) rotate(6deg); }
+  75%  { transform: translate(-1px, 1px) rotate(-4deg); }
+  90%  { transform: translate(1px, -1px) rotate(3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes spray-can-hop {
+  0%   { transform: translateY(0); }
+  35%  { transform: translateY(-4px); }
+  55%  { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes graffiti-spray {
+  0% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  15% {
+    opacity: 1;
+    clip-path: inset(0 90% 0 0);
+  }
+  60% {
+    opacity: 1;
+    clip-path: inset(0 25% 0 0);
+  }
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes graffiti-erase {
+  0% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  40% {
+    opacity: 1;
+    clip-path: inset(0 40% 0 0);
+  }
+  100% {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes earthquake-shake {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-5px, 3px); }
+  40%  { transform: translate(4px, -4px); }
+  60%  { transform: translate(-3px, 5px); }
+  80%  { transform: translate(5px, -3px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes soap-bucket-bounce {
+  0%   { transform: translateY(0); }
+  25%  { transform: translateY(-6px); }
+  45%  { transform: translateY(0); }
+  65%  { transform: translateY(-3px); }
+  80%  { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+
+#dog {
+  z-index: 5;
+  transform-origin: center;
+}
+
+#dog.dancing {
+  animation:
+    dog-dance calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2)) ease-in-out infinite,
+    dog-dance-color calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2) * 2) linear infinite;
+  transform-origin: center bottom;
+  filter: hue-rotate(0deg);
+}
+
+#dog.barking {
+  animation: dog-bark 0.6s ease-out 1;
+  transform-origin: center bottom;
+}
+
+#oscar-statue.dancing {
+  animation:
+    dog-dance calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2)) ease-in-out infinite,
+    dog-dance-color calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2) * 2) linear infinite;
+  transform-origin: 272px 92px;
+  filter: hue-rotate(0deg);
+}
+
+@keyframes disco-flash {
+  0%   { filter: hue-rotate(0deg); opacity: 0.35; }
+  25%  { filter: hue-rotate(90deg); opacity: 0.65; }
+  50%  { filter: hue-rotate(180deg); opacity: 0.45; }
+  75%  { filter: hue-rotate(270deg); opacity: 0.7; }
+  100% { filter: hue-rotate(360deg); opacity: 0.35; }
+}
+
+@keyframes dog-dance {
+  0%   { transform: translate(0, 0) scaleX(1); }
+  30%  { transform: translate(0, -1.5px) rotate(-1deg) scaleX(1); }
+  50%  { transform: translate(0, 0) rotate(0deg) scaleX(1); }
+  80%  { transform: translate(0, -1.5px) rotate(1deg) scaleX(1); }
+  100% { transform: translate(0, 0) scaleX(1); }
+}
+
+@keyframes dog-dance-color {
+  0%   { filter: hue-rotate(0deg); }
+  25%  { filter: hue-rotate(60deg); }
+  50%  { filter: hue-rotate(120deg); }
+  75%  { filter: hue-rotate(240deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes dog-bark {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  20%  { transform: translate(0, -2px) scaleX(1.05) scaleY(0.96) rotate(-2deg); }
+  40%  { transform: translate(0, -1px) scaleX(1.04) scaleY(0.98) rotate(2deg); }
+  60%  { transform: translate(0, -2px) scaleX(1.05) scaleY(0.95) rotate(-1.5deg); }
+  80%  { transform: translate(0, -1px) scaleX(1.02) scaleY(0.98) rotate(1deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+@keyframes bee-flight {
+  0%   { transform: translate(0, 0) rotate(0deg) scale(1) scaleX(1); }
+  15%  { transform: translate(-40px, -20px) rotate(-10deg) scale(1.05) scaleX(-1); }
+  30%  { transform: translate(60px, -35px) rotate(12deg) scale(0.95) scaleX(1); }
+  45%  { transform: translate(100px, 10px) rotate(-8deg) scale(1) scaleX(1); }
+  60%  { transform: translate(40px, 30px) rotate(16deg) scale(1.05) scaleX(1); }
+  75%  { transform: translate(-50px, 15px) rotate(-14deg) scale(0.98) scaleX(-1); }
+  90%  { transform: translate(-10px, -10px) rotate(8deg) scale(1.02) scaleX(-1); }
+  100% { transform: translate(0, 0) rotate(0deg) scale(1) scaleX(1); }
+}
+
+@keyframes bee-dance {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  20%  { transform: translate(-2px, -1px) rotate(-10deg); }
+  40%  { transform: translate(3px, -2px) rotate(8deg); }
+  60%  { transform: translate(-2px, 2px) rotate(12deg); }
+  80%  { transform: translate(2px, 1px) rotate(-6deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes bee-dance-color {
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(180deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes plant-dance {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-1px) rotate(-1deg); }
+  100% { transform: translateY(0) rotate(1deg); }
+}
+
+@keyframes plant-dance-color {
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(180deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes dumbell-dance {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-2px) rotate(-3deg); }
+  100% { transform: translateY(0) rotate(3deg); }
+}
+
+@keyframes dumbell-dance-color {
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(180deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes skull-color {
+  0%   { filter: hue-rotate(0deg) saturate(110%); }
+  33%  { filter: hue-rotate(120deg) saturate(150%); }
+  66%  { filter: hue-rotate(240deg) saturate(130%); }
+  100% { filter: hue-rotate(360deg) saturate(110%); }
+}
+
+@keyframes shaka-psychedelic {
+  0%   { transform: scale(1) rotate(0deg); }
+  20%  { transform: scale(1.04) rotate(-3deg); }
+  40%  { transform: scale(1.06) rotate(3deg); }
+  60%  { transform: scale(1.05) rotate(-4deg); }
+  80%  { transform: scale(1.03) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.hitbox {
+  position: absolute;
+  cursor: pointer;
+  z-index: 2;
+  background: transparent;
+}
+
+#door-hit { left: 43px; top: 49px; width: 57px; height: 84px; }
+#tv-hit { left: 185px; top: 59px; width: 90px; height: 38px; }
+#dog-hit { left: 248px; top: 106px; width: 60px; height: 35px; }
+#light-switch-hit { left: 5px; top: 154px; width: 15px; height: 23px; }
+#cd-hit { left: 214px; top: 33px; width: 32px; height: 32px; }
+#mail-hit { left: 230px; top: 158px; width: 20px; height: 15px; }
+#phone-hit { left: 253px; top: 156px; width: 16px; height: 17px; }
+#instagram-hit { left: 272px; top: 156px; width: 18px; height: 18px; }
+#vimeo-hit { left: 293px; top: 156px; width: 20px; height: 18px; }
+#plant-hit { left: 291px; top: 99px; width: 24px; height: 37px; }
+#rubiks-hit { left: 237px; top: 108px; width: 12px; height: 16px; }
+#banana-hit { left: 94px; top: 32px; width: 32px; height: 32px; }
+#flower-hit { left: 64px; top: 0; width: 30px; height: 18px; z-index: 6; }
+#cockatoo-hit { left: 34px; top: 0; width: 25px; height: 19px; z-index: 6; }
+#hot-dog-sign-hit { left: 173px; top: 29px; width: 48px; height: 38px; }
+#hot-dog-portrait-hit { left: 64px; top: 0; width: 30px; height: 18px; z-index: 7; }
+#dancing-dudes-hit { left: 250px; top: 20px; width: 70px; height: 60px; z-index: 6; }
+#skull-hit { left: 104px; top: 7px; width: 21px; height: 21px; }
+#heart-hit { left: 248px; top: 106px; width: 14px; height: 14px; }
+#beehive-hit { left: 104px; top: 61px; width: 27px; height: 32px; }
+#green-man-hit { left: 208px; top: 96px; width: 28px; height: 28px; }
+#shaka-hit { left: 115px; top: 108px; width: 21px; height: 31px; }
+#sc-hit { left: 126px; top: 90px; width: 27px; height: 36px; }
+#maxie-hit { left: 129px; top: 6px; width: 43px; height: 68px; }
+#dumbell-hit { left: 180px; top: 118px; width: 40px; height: 28px; z-index: 9; }
+#kookaburra-hit { left: 275px; top: 30px; width: 45px; height: 46px; }
+#soap-bucket-hit { left: 139px; top: 122px; width: 26px; height: 26px; }
+#me-leaning-hit { left: 45px; top: 128px; width: 66px; height: 52px; }
+#gallery-sexy-nurse-hit { left: 149px; top: 36px; width: 52px; height: 35px; z-index: 7; }
+#gallery-hhbd-hit { left: 157px; top: 75px; width: 45px; height: 51px; z-index: 7; }
+#gallery-bros-hit { left: 196px; top: 34px; width: 39px; height: 32px; z-index: 7; }
+#gallery-mr-floof-hit { left: 207px; top: 77px; width: 38px; height: 36px; z-index: 7; }
+#gallery-bea-and-kate-hit { left: 238px; top: 39px; width: 49px; height: 35px; z-index: 7; }
+#gallery-moderator-hit { left: 249px; top: 84px; width: 39px; height: 39px; z-index: 7; }
+#gallery-misc-hit { left: 293px; top: 68px; width: 24px; height: 29px; z-index: 7; }
+#credits-features-hit { left: 100px; top: 26px; width: 124px; height: 40px; }
+#credits-shorts-hit { left: 102px; top: 80px; width: 120px; height: 48px; }
+#credits-digital-hit { left: 2px; top: 50px; width: 110px; height: 56px; }
+#credits-fun-stuff-hit { left: 220px; top: 40px; width: 95px; height: 105px; }
+.category-hit { z-index: 4; }
+#writing-hit { left: 156px; top: 110px; width: 42px; height: 20px; }
+#directing-hit { left: 152px; top: 98px; width: 50px; height: 20px; }
+#production-design-hit { left: 138px; top: 72px; width: 80px; height: 22px; }
+#animation-hit { left: 150px; top: 84px; width: 52px; height: 20px; }
+
+/* Clouds */
+.nav-cloud {
+  pointer-events: none;
+  position: absolute;
+  left: 191px;
+  top: 0;
+  width: 123px;
+  height: 28px;
+  z-index: 7;
+}
+
+.nav-cloud-current {
+  filter: brightness(1.15);
+}
+
+.about-page #kookaburra {
+  z-index: 8;
+}
+
+.about-page #kookaburra-hit {
+  z-index: 9;
+}
+
+.nav-cloud#nav-home {
+  top: -2px;
+}
+
+.nav-hit {
+  position: absolute;
+  top: 2px;
+  height: 24px;
+  z-index: 8;
+  cursor: pointer;
+}
+
+#nav-home-hit { left: 191px; width: 28px; }
+#nav-about-hit { left: 217px; width: 30px; }
+#nav-gallery-hit { left: 245px; width: 40px; }
+#nav-credits-hit { left: 285px; width: 34px; }
+#nav-home-hit { top: 0px; height: 26px; }
+#nav-about-hit { top: 2px; height: 24px; }
+#nav-gallery-hit { top: 2px; height: 24px; }
+#nav-credits-hit { top: 2px; height: 24px; }
+
+.home-page #nav-home-hit,
+.about-page #nav-about-hit,
+.gallery-page #nav-gallery-hit,
+.credits-page #nav-credits-hit {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ==== RESPONSIVE SCALING (preserve 16:9, letterbox) ==== */
+:root {
+  --scale: 1;
+}
+
+#light-glow {
+  position: absolute;
+  inset: 0;   /* full cover */
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  pointer-events: none; /* click-through so it doesn’t block other items */
+  display: none;        /* start hidden */
+  z-index: 2;
+}
+
+#disco-lights {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 0, 128, 0.35), transparent 55%),
+    radial-gradient(circle at 80% 25%, rgba(0, 255, 255, 0.3), transparent 60%),
+    radial-gradient(circle at 50% 75%, rgba(255, 255, 0, 0.3), transparent 55%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 3s ease;
+  animation: none;
+  visibility: hidden;
+}
+
+#disco-lights.active {
+  opacity: 0.5;
+  visibility: visible;
+  animation: disco-flash 1.2s linear infinite;
+}
+
+/* Disco ball image swaps while music is playing; use native asset size/pos */
+#disco-ball { z-index: 5; display: none; }
+#disco-ball.dancing {
+  animation: dog-dance-color calc(var(--dog-beat-duration, 1s) * var(--dog-beat-multiplier, 2) * 2) linear infinite;
+  filter: hue-rotate(0deg);
+}
+.lights-on #game-container {
+  filter: brightness(1.05);
+  transition: filter 0.3s ease;
+}
+#plant.dancing {
+  animation: plant-dance-color calc(var(--plant-dance-duration, 0.6s) * 2) linear infinite;
+  z-index: 4;
+}
+#magpies {
+  pointer-events: none; /* clicks come from a dedicated hitbox */
+  transform-origin: center;
+}
+
+/* Ensure magpies render above all other layers on Credits */
+.credits-page #magpies {
+  z-index: 8; /* behind credits lists (z=9) */
+}
+
+.credits-page #magpies-overlay {
+  z-index: 9; /* above dim layer and magpies */
+  display: none;
+  pointer-events: none;
+}
+
+/* Magpie-mum landing animation */
+#magpies-overlay.mum-landing {
+  animation: magpie-mum-landing 1s cubic-bezier(.17,.84,.44,1) forwards;
+  transform-origin: 50% 90%;
+}
+
+@keyframes magpie-mum-landing {
+  0%   { transform: translateY(-140px) rotate(-8deg) scale(0.95); opacity: 0; }
+  40%  { transform: translateY(-60px) rotate(-4deg) scale(1.0); opacity: 1; }
+  75%  { transform: translateY(-6px) rotate(0deg); }
+  88%  { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* Magpies click hitbox (adjust to match where magpies are drawn) */
+.credits-page #magpies-hit {
+  position: absolute;
+  left: 205px;
+  top: 113px;
+  width: 69px;
+  height: 40px;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+/* Disable magpies hitbox when any credits overlay is open */
+.credits-page.credits-overlay-open #magpies-hit {
+  pointer-events: none;
+}
+
+/* Magpie STOP grow animation */
+#magpies.stop-grow, #magpies-overlay.stop-grow { animation: magpie-stop-grow 2s ease-out forwards; }
+@keyframes magpie-stop-grow { from { transform: scale(0.7); } to { transform: scale(1); } }
+
+#magpies.stop-shake, #magpies-overlay.stop-shake { animation: magpie-stop-shake 0.1s ease-in-out 60; }
+@keyframes magpie-stop-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-2px, 2px) rotate(-2deg); }
+  40% { transform: translate(2px, -2px) rotate(2deg); }
+  60% { transform: translate(-3px, 1px) rotate(-3deg); }
+  80% { transform: translate(3px, -1px) rotate(3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Subtle fade-in helper for drongo appearance */
+#magpies.drongo-fade, #magpies-overlay.drongo-fade {
+  animation: magpie-fade-in 0.1s ease-in;
+}
+@keyframes magpie-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#magpies.drongo-fly-away, #magpies-overlay.drongo-fly-away {
+  animation: magpie-drongo-fly 1.1s ease-in forwards;
+}
+@keyframes magpie-drongo-fly {
+  0%   { transform: translateY(0); opacity: 1; }
+  40%  { transform: translateY(-40px); opacity: 1; }
+  100% { transform: translateY(-220px); opacity: 0; }
+}
+#credits-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  pointer-events: none;
+  z-index: 8; /* below magpies-overlay (9), above base content */
+}
