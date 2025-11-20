@@ -27,6 +27,72 @@ window.addEventListener('load', () => {
   }, introDuration);
 });
 
+// ====== CUSTOM CURSOR ======
+(() => {
+  const init = () => {
+    if (!document.body || document.getElementById('custom-cursor')) return;
+    const cursor = document.createElement('div');
+    cursor.id = 'custom-cursor';
+    cursor.classList.add('hidden');
+    document.body.appendChild(cursor);
+
+    const root = document.documentElement;
+    const computeHotspot = () => {
+      const styles = getComputedStyle(root);
+      const parse = (value) => {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? 0 : parsed;
+      };
+      return {
+        x: parse(styles.getPropertyValue('--cursor-hotspot-x')),
+        y: parse(styles.getPropertyValue('--cursor-hotspot-y'))
+      };
+    };
+
+    let hotspot = computeHotspot();
+    window.addEventListener('resize', () => {
+      hotspot = computeHotspot();
+    });
+
+    let idleTimerId = null;
+    const scheduleIdleHide = () => {
+      if (idleTimerId) clearTimeout(idleTimerId);
+      idleTimerId = setTimeout(() => {
+        hideCursor();
+      }, 1000);
+    };
+
+    const moveCursor = (event) => {
+      cursor.style.transform = `translate(${event.clientX - hotspot.x}px, ${event.clientY - hotspot.y}px)`;
+      if (!cursor.classList.contains('visible')) {
+        cursor.classList.add('visible');
+        cursor.classList.remove('hidden');
+      }
+      scheduleIdleHide();
+    };
+
+    const hideCursor = () => {
+      if (idleTimerId) {
+        clearTimeout(idleTimerId);
+        idleTimerId = null;
+      }
+      cursor.classList.remove('visible');
+      cursor.classList.add('hidden');
+    };
+
+    document.addEventListener('mousemove', moveCursor);
+    document.addEventListener('mouseenter', moveCursor);
+    document.addEventListener('mouseleave', hideCursor);
+    document.addEventListener('touchstart', hideCursor, { passive: true });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+
 // ====== DOOR TOGGLE ======
 (() => {
   const door = document.getElementById('door');
@@ -100,6 +166,14 @@ window.addEventListener('load', () => {
   const tv = document.getElementById('tv');
   const trigger = document.getElementById('tv-hit') || tv;
   if (!tv || !trigger) return;
+  let screen = document.getElementById('tv-screen');
+  if (!screen) {
+    screen = document.createElement('div');
+    screen.id = 'tv-screen';
+    screen.setAttribute('aria-hidden', 'true');
+    screen.style.display = 'none';
+    tv.insertAdjacentElement('afterend', screen);
+  }
 
   const IDLE_SRC = 'assets/tv.png';
   const FRAMES = [
@@ -108,9 +182,20 @@ window.addEventListener('load', () => {
     { src: 'assets/tv-on-three.png', duration: 500 },
     { src: 'assets/tv-on-four.png', duration: 2000 }
   ];
+  const MUSIC_FRAMES = [
+    'assets/tv-ani-one.png',
+    'assets/tv-ani-two.png',
+    'assets/tv-ani-three.png',
+    'assets/tv-ani-four.png',
+    'assets/tv-ani-five.png',
+    'assets/tv-ani-six.png'
+  ];
+  const MUSIC_FRAME_DURATION = 125;
 
   const timeouts = new Set();
   let running = false;
+  let musicIntervalId = null;
+  let musicFrameIndex = 0;
 
   const clearScheduledFrames = () => {
     timeouts.forEach((id) => clearTimeout(id));
@@ -119,13 +204,40 @@ window.addEventListener('load', () => {
 
   const resetTv = () => {
     clearScheduledFrames();
+    screen.style.display = 'none';
+    screen.style.backgroundImage = '';
     tv.src = IDLE_SRC;
     running = false;
   };
 
+  const isMusicLoopActive = () => Boolean(musicIntervalId);
+
+  const startMusicLoop = () => {
+    if (isMusicLoopActive()) return;
+    clearScheduledFrames();
+    running = false;
+    musicFrameIndex = 0;
+    screen.style.display = 'block';
+    screen.style.backgroundImage = `url('${MUSIC_FRAMES[musicFrameIndex]}')`;
+    musicIntervalId = setInterval(() => {
+      musicFrameIndex = (musicFrameIndex + 1) % MUSIC_FRAMES.length;
+      screen.style.backgroundImage = `url('${MUSIC_FRAMES[musicFrameIndex]}')`;
+    }, MUSIC_FRAME_DURATION);
+  };
+
+  const stopMusicLoop = () => {
+    if (!isMusicLoopActive()) return;
+    clearInterval(musicIntervalId);
+    musicIntervalId = null;
+    musicFrameIndex = 0;
+    resetTv();
+  };
+
   trigger.addEventListener('click', () => {
-    if (running) return;
+    if (running || isMusicLoopActive()) return;
     running = true;
+    screen.style.display = 'none';
+    screen.style.backgroundImage = '';
 
     let delay = 0;
     FRAMES.forEach(({ src, duration }) => {
@@ -143,6 +255,11 @@ window.addEventListener('load', () => {
     }, delay);
     timeouts.add(resetId);
   });
+
+  window.tvController = {
+    startMusicLoop,
+    stopMusicLoop
+  };
 })();
 
 // ====== MAXIE PORTRAIT WINK ======
@@ -298,29 +415,53 @@ window.addEventListener('load', () => {
 
   const BASE_SRC = 'assets/cockatoo-portrait.png';
   const SPEECH_FIVE_SRC = 'assets/cockatoo-speech-five.png';
+  const DANCE_SRC = 'assets/cockatoo-speech-two.png';
+  const SPEECH_FRONT_CLASS = 'cockatoo-speech-front';
   let busy = false;
   let timers = [];
   let pulseTimerId = null;
-  let pulsing = true;
+  let danceActive = false;
+  let clickedOnce = false;
+
+  const requestCdGlowReminder = () => {
+    const controller = window.cdController;
+    if (controller && typeof controller.startGlowReminder === 'function') {
+      controller.startGlowReminder();
+    }
+  };
 
   const startPulse = () => {
-    if (!pulsing) return;
+    if (pulseTimerId || clickedOnce) return;
     portrait.classList.add('cockatoo-pulse');
     pulseTimerId = setInterval(() => {
-      if (!pulsing) return;
       portrait.classList.remove('cockatoo-pulse');
       void portrait.offsetWidth;
       portrait.classList.add('cockatoo-pulse');
-    }, 3000);
+    }, 2000);
   };
 
   const stopPulse = () => {
-    pulsing = false;
     portrait.classList.remove('cockatoo-pulse');
     if (pulseTimerId) {
       clearInterval(pulseTimerId);
       pulseTimerId = null;
     }
+  };
+
+  const showDancePose = () => {
+    portrait.src = DANCE_SRC;
+    portrait.style.filter = '';
+    portrait.classList.add(SPEECH_FRONT_CLASS);
+    portrait.classList.remove('cockatoo-speech-five');
+    portrait.classList.add('cockatoo-hop');
+  };
+
+  const showIdlePose = () => {
+    portrait.src = BASE_SRC;
+    portrait.style.filter = '';
+    portrait.classList.remove('cockatoo-speech-five');
+    portrait.classList.remove(SPEECH_FRONT_CLASS);
+    portrait.classList.remove('cockatoo-hop');
   };
 
   const clearTimers = () => {
@@ -329,10 +470,32 @@ window.addEventListener('load', () => {
   };
 
   const reset = () => {
-    portrait.src = BASE_SRC;
-    portrait.style.filter = '';
     busy = false;
-    stopPulse();
+    clearTimers();
+    if (!clickedOnce) startPulse();
+    if (danceActive) {
+      showDancePose();
+    } else {
+      showIdlePose();
+    }
+  };
+
+  const startDancePose = () => {
+    if (danceActive) return;
+    danceActive = true;
+    if (!busy) {
+      stopPulse();
+      showDancePose();
+    }
+  };
+
+  const stopDancePose = () => {
+    if (!danceActive) return;
+    danceActive = false;
+    if (!busy) {
+      showIdlePose();
+      if (!clickedOnce) startPulse();
+    }
   };
 
   const playSequence = () => {
@@ -340,6 +503,8 @@ window.addEventListener('load', () => {
     busy = true;
     clearTimers();
     stopPulse();
+    clickedOnce = true;
+    portrait.classList.add(SPEECH_FRONT_CLASS);
 
     let elapsed = 0;
     frames.forEach(({ src, duration }) => {
@@ -355,30 +520,70 @@ window.addEventListener('load', () => {
     const resetToBaseId = setTimeout(() => {
       portrait.src = BASE_SRC;
       portrait.style.filter = '';
+      portrait.classList.remove(SPEECH_FRONT_CLASS);
     }, totalFrameDuration);
     timers.push(resetToBaseId);
 
     const speechFiveDelay = 3000;
     const speechFiveStart = totalFrameDuration + speechFiveDelay;
 
-  const speechFiveId = setTimeout(() => {
-    portrait.src = SPEECH_FIVE_SRC;
-    portrait.style.filter = '';
-    portrait.classList.add('cockatoo-speech-five');
-  }, speechFiveStart);
-  timers.push(speechFiveId);
+    const speechFiveId = setTimeout(() => {
+      portrait.src = SPEECH_FIVE_SRC;
+      portrait.style.filter = '';
+      portrait.classList.add('cockatoo-speech-five');
+    }, speechFiveStart);
+    timers.push(speechFiveId);
 
-  const resetAfterSpeechFiveId = setTimeout(() => {
-    portrait.classList.remove('cockatoo-speech-five');
-    reset();
-  }, speechFiveStart + 2000);
-  timers.push(resetAfterSpeechFiveId);
+    const resetAfterSpeechFiveId = setTimeout(() => {
+      portrait.classList.remove('cockatoo-speech-five');
+      reset();
+      requestCdGlowReminder();
+    }, speechFiveStart + 2000);
+    timers.push(resetAfterSpeechFiveId);
   };
 
   hitbox.addEventListener('click', playSequence);
   portrait.addEventListener('click', playSequence);
 
+  window.cockatooController = {
+    startDance: startDancePose,
+    stopDance: stopDancePose
+  };
+
   startPulse();
+})();
+
+// ====== CLICK PROMPT (HOME PAGE) ======
+(() => {
+  if (!document.body.classList.contains('home-page')) return;
+  const prompt = document.getElementById('click-prompt');
+  const cockatoo = document.getElementById('cockatoo-portrait');
+  const cockatooHit = document.getElementById('cockatoo-hit');
+  if (!prompt || !cockatoo) return;
+
+  let timeoutId = null;
+  let active = true;
+
+  const hidePrompt = () => {
+    if (!active) return;
+    active = false;
+    prompt.style.display = 'none';
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+    cockatoo.removeEventListener('click', hidePrompt);
+    if (cockatooHit) cockatooHit.removeEventListener('click', hidePrompt);
+  };
+
+  timeoutId = setTimeout(() => {
+    if (!active) return;
+    prompt.style.display = 'block';
+  }, 5000);
+
+  cockatoo.addEventListener('click', hidePrompt);
+  if (cockatooHit) cockatooHit.addEventListener('click', hidePrompt);
+  window.addEventListener('beforeunload', hidePrompt);
 })();
 
 // ====== PLANT BLOOM & MUSIC CYCLE ======
@@ -1350,6 +1555,7 @@ window.addEventListener('load', () => {
   const hotDogController = window.hotDogController;
   const dancingDudesController = window.dancingDudesController;
   const skullFire = window.skullFire;
+  const tvController = window.tvController;
   const audio = document.getElementById('cd-audio') || new Audio('assets/theme.mp3');
   if (!cd || !hitbox || !audio || !stage) return;
 
@@ -1379,6 +1585,19 @@ window.addEventListener('load', () => {
   }
 
   let playing = false;
+  let glowReminderActive = false;
+
+  const startGlowReminder = () => {
+    if (glowReminderActive || playing) return;
+    glowReminderActive = true;
+    cd.classList.add('cd-glow-reminder');
+  };
+
+  const stopGlowReminder = () => {
+    if (!glowReminderActive) return;
+    glowReminderActive = false;
+    cd.classList.remove('cd-glow-reminder');
+  };
 
   let danceTimer = null;
   let discoBallTimer = null;
@@ -1451,6 +1670,9 @@ window.addEventListener('load', () => {
     if (hotDogController) hotDogController.startLoop();
     if (dancingDudesController) dancingDudesController.startLoop();
     if (skullFire) skullFire.startMusic();
+    if (tvController && typeof tvController.startMusicLoop === 'function') {
+      tvController.startMusicLoop();
+    }
     danceTimer = null;
   };
 
@@ -1471,6 +1693,9 @@ window.addEventListener('load', () => {
     if (hotDogController) hotDogController.stopLoop();
     if (dancingDudesController) dancingDudesController.stopLoop();
     if (skullFire) skullFire.stopMusic();
+    if (tvController && typeof tvController.stopMusicLoop === 'function') {
+      tvController.stopMusicLoop();
+    }
     if (disco) disco.classList.remove('active');
     stage.classList.remove('dimmed');
     if (danceTimer) {
@@ -1480,6 +1705,7 @@ window.addEventListener('load', () => {
   };
 
   hitbox.addEventListener('click', () => {
+    stopGlowReminder();
     if (!playing) {
       ensureStartOffset();
       const playPromise = audio.play();
@@ -1507,7 +1733,13 @@ window.addEventListener('load', () => {
     playing = false;
     cd.style.animationPlayState = 'paused';
     stopDancing();
+    stopGlowReminder();
   });
+
+  window.cdController = {
+    startGlowReminder,
+    stopGlowReminder
+  };
 })();
 
 // ====== DUMBELL → GAINS SEQUENCE ======
@@ -1735,12 +1967,27 @@ window.addEventListener('load', () => {
 // ====== BOTTOM ICONS ======
 (() => {
   const mailHit = document.getElementById('mail-hit');
+  const phoneImg = document.getElementById('phone');
   const phoneHit = document.getElementById('phone-hit');
   const igHit = document.getElementById('instagram-hit');
   const vimeoHit = document.getElementById('vimeo-hit');
+  const phoneNumber = document.getElementById('phone-number');
+  const phoneNumberClose = document.getElementById('phone-number-x');
+
+  const showPhoneNumber = () => {
+    if (phoneNumber) phoneNumber.style.display = 'block';
+    if (phoneNumberClose) phoneNumberClose.style.display = 'block';
+  };
+
+  const hidePhoneNumber = () => {
+    if (phoneNumber) phoneNumber.style.display = 'none';
+    if (phoneNumberClose) phoneNumberClose.style.display = 'none';
+  };
 
   if (mailHit)  mailHit.addEventListener('click',  () => window.location.href = 'mailto:alexrhhoney@gmail.com'); // or: 'mailto:you@email.com'
-  if (phoneHit) phoneHit.addEventListener('click', () => window.location.href = 'contact.html'); // or: 'tel:+61...'
+  if (phoneImg) phoneImg.addEventListener('click', showPhoneNumber);
+  if (phoneHit) phoneHit.addEventListener('click', showPhoneNumber);
+  if (phoneNumberClose) phoneNumberClose.addEventListener('click', hidePhoneNumber);
   if (igHit)    igHit.addEventListener('click',    () => window.open('https://www.instagram.com/sauvignonblancpink/', '_blank'));
   if (vimeoHit) vimeoHit.addEventListener('click', () => window.open('https://vimeo.com/YOUR_USERNAME', '_blank'));
 })();
